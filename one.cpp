@@ -5,8 +5,8 @@ using namespace std;
 #include <fstream>
 #include <sstream>
 
-
 int main() {
+
 
     // part 1
 
@@ -14,62 +14,55 @@ int main() {
 
     string my_string;
 
-    int total;
-    vector<int> total1;
-    vector<int> total2;
+    int safe;
 
-  
+    bool increasing;
     while (getline (MyFile, my_string)) {
 
+        stringstream ss(my_string);
+        bool valid = true;
+        bool allowed = true;
 
-        string str1, str2;
-        stringstream s(my_string);
-        s >> str1 >> str2;
-
-        int n1 = stoi(str1);
-        int n2 = stoi(str2);
-
-        total1.push_back(n1);
-        total2.push_back(n2);
-    
-    }
-
-    MyFile.close(); 
-
-    sort(total1.begin(), total1.end());
-    sort(total2.begin(), total2.end());
-    for (int i = 0; i < total1.size(); i++)
-    {
-        total += abs(total1[i] - total2[i]);
-    }
-
-
-    cout << "This is total difference: " << total << endl;
-
-
-
-    // part 2 
-
-    int score = 0;
-
-    for (int i = 0; i < total1.size(); i++)
-    {
-
-        int n = 0;
-
-        for (int j = 0; j < total2.size(); j++)
+        int same;
+        string s;
+        ss >> s;
+        int curr = stoi(s);
+        ss >> s;
+        int temp = stoi(s);
+        if ((curr - temp > 0) && abs(curr - temp) <= 3)
         {
-            if (total1[i] == total2[j])
+            increasing = true;
+        }
+        else if ((curr - temp < 0) && abs(curr - temp) <= 3)
+        {
+            increasing = false;
+        }
+
+        while (ss >> s)
+        {   
+            curr = temp;
+            temp = stoi(s);
+            if (increasing == true && (curr - temp > 0) && abs(curr - temp) <= 3)
             {
-                n++;
             }
-            else if (total1[i] < total2[j])
+            else if (increasing == false && (curr - temp < 0) && abs(curr - temp) <= 3)
             {
+            }
+            else
+            {
+                valid = false;
                 break;
             }
         }
+        if (valid)
+        {
+            safe++;
+        }
 
-        score += n * total1[i];
     }
-    cout << "this is total score: " << score << endl;
+    MyFile.close();
+
+
+    cout << "This many reports are safe: " << safe << endl;
+
 }
